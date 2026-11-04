@@ -1,0 +1,111 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+/* ── CSS Variables — Light & Dark ───────────────────────────────── */
+:root {
+  --bg-primary:     #F9FAFB;
+  --bg-secondary:   #FFFFFF;
+  --bg-card:        #FFFFFF;
+  --text-primary:   #111827;
+  --text-secondary: #6B7280;
+  --border-color:   #E5E7EB;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-hover: #a1a1a1;
+}
+ 
+html.dark {
+  --bg-primary:     #0F172A;
+  --bg-secondary:   #1E293B;
+  --bg-card:        #1E293B;
+  --text-primary:   #F1F5F9;
+  --text-secondary: #94A3B8;
+  --border-color:   #334155;
+  --scrollbar-track: #1E293B;
+  --scrollbar-thumb: #475569;
+  --scrollbar-hover: #64748B;
+}
+ 
+/* ── Base styles ─────────────────────────────────────────────────── */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+ 
+/* ── Dark mode overrides for Tailwind classes ────────────────────── */
+html.dark .bg-white          { background-color: #1E293B !important; }
+html.dark .bg-gray-50        { background-color: #0F172A !important; }
+html.dark .bg-gray-100       { background-color: #1E293B !important; }
+html.dark .bg-neutral-50     { background-color: #0F172A !important; }
+html.dark .bg-neutral-100    { background-color: #1E293B !important; }
+html.dark .text-gray-900     { color: #F1F5F9 !important; }
+html.dark .text-gray-800     { color: #E2E8F0 !important; }
+html.dark .text-gray-700     { color: #CBD5E1 !important; }
+html.dark .text-gray-600     { color: #94A3B8 !important; }
+html.dark .text-gray-500     { color: #64748B !important; }
+html.dark .text-gray-400     { color: #475569 !important; }
+html.dark .border-gray-100   { border-color: #334155 !important; }
+html.dark .border-gray-200   { border-color: #334155 !important; }
+html.dark .border-gray-300   { border-color: #475569 !important; }
+html.dark .divide-gray-50    > * { border-color: #334155 !important; }
+html.dark .shadow-lg         { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4) !important; }
+html.dark .shadow-md         { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.4) !important; }
+html.dark .shadow-sm         { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.4) !important; }
+ 
+/* Hover states in dark */
+html.dark .hover\:bg-gray-50:hover  { background-color: #334155 !important; }
+html.dark .hover\:bg-gray-100:hover { background-color: #334155 !important; }
+html.dark .bg-gray-50.hover\:bg-gray-100 { background-color: #1E293B !important; }
+ 
+/* Table dark */
+html.dark table thead tr       { background-color: #0F172A !important; }
+html.dark table tbody tr:hover { background-color: #334155 !important; }
+ 
+/* Input dark */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0F172A !important;
+  border-color: #334155 !important;
+  color: #F1F5F9 !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder { color: #475569 !important; }
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #DC2626 !important;
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.15) !important;
+}
+ 
+/* Card backgrounds in dark */
+html.dark .rounded-2xl,
+html.dark .rounded-xl {
+  border-color: #334155;
+}
+ 
+/* ── Smooth transitions ──────────────────────────────────────────── */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+ 
+/* But NOT for transforms/opacity — would break animations */
+button, a {
+  transition: all 0.2s ease-in-out;
+}
+ 
+/* ── Custom Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
