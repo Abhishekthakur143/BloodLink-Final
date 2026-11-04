@@ -9,15 +9,12 @@ import DonorDashboardPage from './pages/DonorDashboardPage';
 import CreateCampPage from './pages/CreateCampPage';
 import CampsPage from './pages/CampsPage';
 import HospitalDashboardPage from './pages/HospitalDashboardPage';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import socket from './utils/socket';
-import AIChatPage from './pages/AIChatPage';
-import AdminDashboardPage from './pages/AdminDashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProfilePage from './pages/ProfilePage';
 import SOSPage from './pages/SOSPage';
 import DashboardPage from './pages/DashboardPage';
-import MapPage from './pages/MapPage';
 import Footer from './components/Footer';
 import { Navigate } from 'react-router-dom';
 import { ToastManager, NotificationBell } from './components/NotificationSystem';
@@ -33,6 +30,21 @@ import {
   ChevronDown, Stethoscope, Users, Calendar,
   Sun, Moon  // ✅ NEW: Sun & Moon icons for toggle
 } from 'lucide-react';
+ 
+/* ═══════════════════════════════════════════════════════════════════
+   LAZY-LOADED PAGES (heavy pages load only when opened)
+═══════════════════════════════════════════════════════════════════ */
+const MapPage = lazy(() => import('./pages/MapPage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
+const AIChatPage = lazy(() => import('./pages/AIChatPage'));
+ 
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
  
 /* ═══════════════════════════════════════════════════════════════════
    GLOBAL STYLES
@@ -631,25 +643,27 @@ export default function App() {
         <Navbar isDark={isDark} toggleDark={toggleDark} />
  
         <div className="flex-grow">
-          <Routes>
-            <Route path="/login"              element={<PageWrapper><LoginPage /></PageWrapper>} />
-            <Route path="/register"           element={<PageWrapper><RegisterPage /></PageWrapper>} />
-            <Route path="/request-blood"      element={<PageWrapper><RequestBloodPage /></PageWrapper>} />
-            <Route path="/search-requests"    element={<PageWrapper><SearchRequestsPage /></PageWrapper>} />
-            <Route path="/donor-dashboard"    element={<PageWrapper><DonorDashboardPage /></PageWrapper>} />
-            <Route path="/create-camp"        element={<PageWrapper><CreateCampPage /></PageWrapper>} />
-            <Route path="/camps"              element={<PageWrapper><CampsPage /></PageWrapper>} />
-            <Route path="/hospital-dashboard" element={<PageWrapper><HospitalDashboardPage /></PageWrapper>} />
-            <Route path="/ai-chat"            element={<PageWrapper><AIChatPage /></PageWrapper>} />
-            <Route path="/admin"              element={<AdminRoute><PageWrapper><AdminDashboardPage /></PageWrapper></AdminRoute>} />
-            <Route path="/profile"            element={<PageWrapper><ProfilePage /></PageWrapper>} />
-            <Route path="/sos"                element={<PageWrapper><SOSPage /></PageWrapper>} />
-            <Route path="/maps"               element={<PageWrapper><MapPage /></PageWrapper>} />
-            <Route path="/forgot-password" element={<PageWrapper><ForgotPasswordPage /></PageWrapper>} />
-            <Route path="/reset-password/:token" element={<PageWrapper><ResetPasswordPage /></PageWrapper>} />
-            <Route path="/"                   element={<PageWrapper><DashboardPage /></PageWrapper>} />
-            <Route path="*"                   element={<PageWrapper><NotFoundPage /></PageWrapper>} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/login"              element={<PageWrapper><LoginPage /></PageWrapper>} />
+              <Route path="/register"           element={<PageWrapper><RegisterPage /></PageWrapper>} />
+              <Route path="/request-blood"      element={<PageWrapper><RequestBloodPage /></PageWrapper>} />
+              <Route path="/search-requests"    element={<PageWrapper><SearchRequestsPage /></PageWrapper>} />
+              <Route path="/donor-dashboard"    element={<PageWrapper><DonorDashboardPage /></PageWrapper>} />
+              <Route path="/create-camp"        element={<PageWrapper><CreateCampPage /></PageWrapper>} />
+              <Route path="/camps"              element={<PageWrapper><CampsPage /></PageWrapper>} />
+              <Route path="/hospital-dashboard" element={<PageWrapper><HospitalDashboardPage /></PageWrapper>} />
+              <Route path="/ai-chat"            element={<PageWrapper><AIChatPage /></PageWrapper>} />
+              <Route path="/admin"              element={<AdminRoute><PageWrapper><AdminDashboardPage /></PageWrapper></AdminRoute>} />
+              <Route path="/profile"            element={<PageWrapper><ProfilePage /></PageWrapper>} />
+              <Route path="/sos"                element={<PageWrapper><SOSPage /></PageWrapper>} />
+              <Route path="/maps"               element={<PageWrapper><MapPage /></PageWrapper>} />
+              <Route path="/forgot-password"    element={<PageWrapper><ForgotPasswordPage /></PageWrapper>} />
+              <Route path="/reset-password/:token" element={<PageWrapper><ResetPasswordPage /></PageWrapper>} />
+              <Route path="/"                   element={<PageWrapper><DashboardPage /></PageWrapper>} />
+              <Route path="*"                   element={<PageWrapper><NotFoundPage /></PageWrapper>} />
+            </Routes>
+          </Suspense>
         </div>
  
         <Footer />
@@ -657,3 +671,4 @@ export default function App() {
     </Router>
   );
 }
+ 
