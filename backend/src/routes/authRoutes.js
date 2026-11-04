@@ -4,7 +4,6 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
  
 // ── Auth Middleware ───────────────────────────────────────────────
 const protect = async (req, res, next) => {
@@ -24,20 +23,24 @@ const protect = async (req, res, next) => {
 };
  
 // ── Email Sender ──────────────────────────────────────────────────
+// ── Email Sender (Brevo API) ──────────────────────────────────────
 const sendEmail = async ({ to, subject, html }) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+  const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY,
+      'content-type': 'application/json',
+      accept: 'application/json',
     },
+    body: JSON.stringify({
+      sender: { name: 'BloodLink', email: process.env.EMAIL_USER },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
   });
-  await transporter.sendMail({
-    from: `"BloodLink" <${process.env.EMAIL_USER}>`,
-    to, subject, html,
-  });
+  if (!r.ok) throw new Error(`Brevo ${r.status}: ${await r.text()}`);
 };
- 
 // ── Register ──────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
