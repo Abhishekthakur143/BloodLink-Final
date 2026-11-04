@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api';
  
 export default function ResetPasswordPage() {
   const { token } = useParams();
@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
     setLoading(true);
     setStatus(null);
     try {
-      const res = await axios.put(`/api/auth/reset-password/${token}`, { password });
+     const res = await axios.put(`/auth/reset-password/${token}`, { password });
       // Auto login — token save karo
       localStorage.setItem('token', res.data.token);
       setStatus('success');

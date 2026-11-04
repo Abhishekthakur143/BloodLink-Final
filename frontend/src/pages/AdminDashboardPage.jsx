@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAdminStats, getAdminUsers, getBloodStats } from '../api/admin';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
@@ -196,7 +196,7 @@ export default function AdminDashboardPage() {
   const fetchAllCamps = async () => {
     setCampsLoading(true);
     try {
-      const res = await axios.get('/api/camps/admin/all', { headers: authHeader() });
+      const res = await axios.get('/camps/admin/all', { headers: authHeader() });
       setCamps(res.data.data);
     } catch (err) {
       showToast('Failed to load camps', 'error');
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
   const markEndedCamps = async () => {
     setMarking(true);
     try {
-      const res = await axios.post('/api/camps/mark-ended', {}, { headers: authHeader() });
+      const res = await axios.post('/camps/mark-ended', {}, { headers: authHeader() });
       showToast(res.data.message, 'success');
       fetchAllCamps();
     } catch (err) {
@@ -221,7 +221,7 @@ export default function AdminDashboardPage() {
   const deleteCamp = async (campId) => {
     setDeletingId(campId);
     try {
-      await axios.delete(`/api/camps/admin/delete-ended/${campId}`, { headers: authHeader() });
+      await axios.delete(`/camps/admin/delete-ended/${campId}`, { headers: authHeader() });
       showToast('Camp deleted successfully', 'success');
       fetchAllCamps();
     } catch (err) {
@@ -235,7 +235,7 @@ export default function AdminDashboardPage() {
   const deleteAllEnded = async () => {
     setDeletingAll(true);
     try {
-      const res = await axios.delete('/api/camps/admin/delete-all-ended', { headers: authHeader() });
+      const res = await axios.delete('/camps/admin/delete-all-ended', { headers: authHeader() });
       showToast(res.data.message, 'success');
       fetchAllCamps();
     } catch (err) {
@@ -735,3 +735,4 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+ 
