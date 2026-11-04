@@ -24,6 +24,7 @@ const protect = async (req, res, next) => {
  
 // ── Email Sender ──────────────────────────────────────────────────
 // ── Email Sender (Brevo API) ──────────────────────────────────────
+console.log('Mailer: Brevo API v1');
 const sendEmail = async ({ to, subject, html }) => {
   const r = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
